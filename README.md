@@ -25,6 +25,8 @@ gastos-personales-app/
 │   ├── database.sql
 │   ├── config/
 │   │   └── database.php
+├── migraciones/
+│   │   └── 2026-10-normalizar-cuotas.sql
 │   ├── utils/
 │   │   ├── response.php
 │   │   ├── auth.php
