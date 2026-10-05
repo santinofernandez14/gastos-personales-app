@@ -4,3 +4,4 @@ composer.phar
 .env.local
 database.sql
 .htaccess
+.*sql

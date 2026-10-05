@@ -4,3 +4,4 @@ backend/.env
 backend/.env.local
 backend/database.sql
 backend/.htaccess
+*.sql
