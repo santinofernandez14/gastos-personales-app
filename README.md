@@ -68,16 +68,39 @@ gastos-personales-app/
    - Completá tus credenciales de MySQL.
    - Si querés usar Brevo, cargá `BREVO_API_KEY`.
 
-3. **Publicá el proyecto en Apache + PHP**
+
+3. **Crear la carpeta config dentro de la carpeta backend**
+   - Copiá el archivo database.php en la carpeta config.
+   - La estructura quedaria `backend/config/database.php`
+   
+
+4. **Pegar archivo .htaccess**
+   - Pegar el archivo .htaccess en la carpeta backend.
+   - La estructura quedaria `backend/.htaccess`
+
+
+5. **Pegar archivo configuracion.php dentro de la carpeta api**
+   - Pegar el archivo configuracion.php en la carpeta api.
+   - La estructura quedaria `backend/api/configuracion.php`
+   
+
+6. **Crear la carpeta migraciones dentro de la carpeta backend**
+   - Copiá el archivo 2026-10-normalizar-cuotas.sql dentro de la carpeta backend.
+   - La estructura quedaria `backend/migraciones/2026-10-normalizar-cuotas.sql`
+   
+
+7. **Publicá el proyecto en Apache + PHP**
    - Dejá la carpeta `gastos-personales-app` visible desde tu servidor.
    - La API va a responder en:
      `http://localhost/gastos-personales-app/backend/api`
 
-4. **Revisá URL base en frontend**
+
+8. **Revisá URL base en frontend**
    - En `frontend/js/api.js`, la constante debe ser:
      `http://localhost/gastos-personales-app/backend/api`
 
-5. **Abrí la aplicación**
+
+9. **Abrí la aplicación**
    - Entrá a `frontend/index.html` desde tu servidor web.
 
 ## Variables de entorno (`backend/.env.example`)

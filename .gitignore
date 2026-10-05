@@ -5,3 +5,5 @@ backend/.env.local
 backend/database.sql
 backend/.htaccess
 *.sql
+backend/api/configuracion.php
+backend/config/database.php
