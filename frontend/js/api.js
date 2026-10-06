@@ -10,7 +10,7 @@
   * Devuelve la URL base de la API según la URL del frontend.
  */
 function obtenerUrlApi() {
-  var fallback = 'http://localhost/gastos-personales-app/backend/api';
+  var fallback = 'attractive-embrace-production-6ca8.up.railway.app';
 
   // Controlamos si estamos en http o https.
   if (location.protocol !== 'http:' && location.protocol !== 'https:') {
