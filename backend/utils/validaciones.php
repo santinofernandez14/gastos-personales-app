@@ -3,6 +3,9 @@
  * Este archivo junta validaciones reutilizables del proyecto.
  * Sirve para evitar repetir controles en cada endpoint.
  */
+header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Methods: POST, GET, OPTIONS");
+header("Access-Control-Allow-Headers: Content-Type, Authorization");
 
 require_once __DIR__ . '/response.php';
 

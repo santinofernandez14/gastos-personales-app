@@ -93,7 +93,7 @@ function inicializarRegistro() {
     };
 
     try {
-      var respuesta = await apiRequest('register.php', {
+      var respuesta = await apiRequest('https://backend-production-c07cb.up.railway.app', {
         method: 'POST',
         body: JSON.stringify(payload)
       });

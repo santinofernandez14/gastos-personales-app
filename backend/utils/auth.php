@@ -3,6 +3,9 @@
  * Acá creamos funciones para manejar la autenticación 
  * de usuarios mediante tokens Bearer.
  */
+header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Methods: POST, GET, OPTIONS");
+header("Access-Control-Allow-Headers: Content-Type, Authorization");
 
 require_once __DIR__ . '/response.php';
 require_once __DIR__ . '/../config/database.php';

@@ -4,7 +4,9 @@
  * Si no configurás BREVO_API_KEY en .env, no pasa nada: se omite en silencio.
  * Esto está pensado así para que la app siga funcionando igual en local.
  */
-
+header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Methods: POST, GET, OPTIONS");
+header("Access-Control-Allow-Headers: Content-Type, Authorization");
 require_once __DIR__ . '/../config/database.php';
 
 /**

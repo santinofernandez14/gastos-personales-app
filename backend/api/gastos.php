@@ -8,7 +8,9 @@
  * - credito: se informa monto y cantidad de cuotas; el valor de cuota lo calcula el servidor.
  * El backend es la única fuente de verdad: valor_cuota y valor_total que mande el cliente se ignoran.
  */
-
+header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Methods: POST, GET, OPTIONS");
+header("Access-Control-Allow-Headers: Content-Type, Authorization");
 require_once __DIR__ . '/../config/database.php';
 require_once __DIR__ . '/../utils/response.php';
 require_once __DIR__ . '/../utils/validaciones.php';
