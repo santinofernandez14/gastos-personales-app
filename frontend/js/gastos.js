@@ -18,8 +18,7 @@ var NOMBRES_METODO = {
 };
 
 /**
- * Devuelve la fecha de hoy (hora LOCAL) en formato YYYY-MM-DD.
- * toISOString() usa UTC: en Argentina, después de las 21 h devolvía el día siguiente.
+ * Devuelve la fecha de hoy (hora local) en formato YYYY-MM-DD.
  */
 function hoyISO() {
   var hoy = new Date();

@@ -35,6 +35,17 @@ async function cargarMetricas() {
     document.getElementById('economia').textContent = formatearMoneda(datos.economia.valor) + ' (' + datos.economia.estado + ')';
     document.getElementById('balance-cierre').textContent = formatearMoneda(datos.balance_por_cierre);
 
+    // Mostramos la cotización USD → ARS obtenida del servicio externo.
+    var elCotizacion = document.getElementById('cotizacion-usd');
+    if (elCotizacion) {
+      var cot = datos.cotizacion_usd_ars;
+      if (cot && cot.valor !== null) {
+        elCotizacion.textContent = '1 USD = ' + new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS', minimumFractionDigits: 2 }).format(cot.valor);
+      } else {
+        elCotizacion.textContent = 'No disponible en este momento.';
+      }
+    }
+
     var listaCategorias = document.getElementById('lista-categorias');
     listaCategorias.innerHTML = '';
 

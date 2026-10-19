@@ -4,9 +4,7 @@
  * Métodos: GET, POST, PUT y DELETE.
  * El campo es_fijo se guarda como 0 o 1 en la base, en la app lo mostramos como booleano.
  */
-header("Access-Control-Allow-Origin: *");
-header("Access-Control-Allow-Methods: POST, GET, OPTIONS");
-header("Access-Control-Allow-Headers: Content-Type, Authorization");
+
 require_once __DIR__ . '/../config/database.php';
 require_once __DIR__ . '/../utils/response.php';
 require_once __DIR__ . '/../utils/validaciones.php';
@@ -27,7 +25,10 @@ try {
     if ($metodo === 'GET') {
         $ingresoId = 0;
         if (isset($_GET['id'])) {
-            $ingresoId = (int) $_GET['id'];
+            $ingresoId = filter_var($_GET['id'], FILTER_VALIDATE_INT, array('options' => array('min_range' => 1)));
+            if ($ingresoId === false) {
+                responderError('El id debe ser un número entero válido.', 422);
+            }
         }
 
         if ($ingresoId > 0) {
@@ -74,6 +75,10 @@ try {
         $fecha = (string) $datos['fecha'];
         $esFijo = filter_var($datos['es_fijo'], FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
 
+        if ($descripcion === '') {
+            responderError('La descripción no puede estar vacía o contener solo espacios.', 422);
+        }
+
         validarFecha($fecha);
         if ($esFijo === null) {
             responderError('El campo es_fijo debe ser verdadero o falso.', 422);
@@ -110,6 +115,10 @@ try {
         $monto = validarMonto($datos['monto']);
         $fecha = (string) $datos['fecha'];
         $esFijo = filter_var($datos['es_fijo'], FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
+
+        if ($descripcion === '') {
+            responderError('La descripción no puede estar vacía o contener solo espacios.', 422);
+        }
 
         validarFecha($fecha);
         if ($esFijo === null) {
@@ -165,5 +174,6 @@ try {
 
     responderError('Método no permitido.', 405);
 } catch (PDOException $e) {
-    responderError('Ocurrió un error en la base de datos.', 500, array('detalle' => $e->getMessage()));
+    error_log('[gastos-personales] PDOException en ingresos.php: ' . $e->getMessage());
+    responderError('Ocurrió un error en la base de datos.', 500);
 }

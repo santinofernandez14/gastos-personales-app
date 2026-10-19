@@ -4,9 +4,7 @@
  * Métodos usados GET, POST, PUT, DELETE.
  * De acuerdo al método, se listan, crean, actualizan o eliminan tarjetas del usuario autenticado.
  */
-header("Access-Control-Allow-Origin: *");
-header("Access-Control-Allow-Methods: POST, GET, OPTIONS");
-header("Access-Control-Allow-Headers: Content-Type, Authorization");
+
 require_once __DIR__ . '/../config/database.php';
 require_once __DIR__ . '/../utils/response.php';
 require_once __DIR__ . '/../utils/validaciones.php';
@@ -27,7 +25,10 @@ try {
     if ($metodo === 'GET') {
         $tarjetaId = 0;
         if (isset($_GET['id'])) {
-            $tarjetaId = (int) $_GET['id'];
+            $tarjetaId = filter_var($_GET['id'], FILTER_VALIDATE_INT, array('options' => array('min_range' => 1)));
+            if ($tarjetaId === false) {
+                responderError('El id debe ser un número entero válido.', 422);
+            }
         }
 
         $conGastos = false;
@@ -104,6 +105,13 @@ try {
         $banco = trim((string) $datos['banco']);
         $ultimos4 = validarUltimosCuatro($datos['ultimos_4']);
 
+        if ($nombre === '') {
+            responderError('El nombre de la tarjeta no puede estar vacío o contener solo espacios.', 422);
+        }
+        if ($banco === '') {
+            responderError('El banco no puede estar vacío o contener solo espacios.', 422);
+        }
+
         validarTipoTarjeta($tipo);
 
         $sqlInsertar = 'INSERT INTO tarjetas (usuario_id, nombre, tipo, banco, ultimos_4)
@@ -137,6 +145,13 @@ try {
         $tipo = trim((string) $datos['tipo']);
         $banco = trim((string) $datos['banco']);
         $ultimos4 = validarUltimosCuatro($datos['ultimos_4']);
+
+        if ($nombre === '') {
+            responderError('El nombre de la tarjeta no puede estar vacío o contener solo espacios.', 422);
+        }
+        if ($banco === '') {
+            responderError('El banco no puede estar vacío o contener solo espacios.', 422);
+        }
 
         validarTipoTarjeta($tipo);
 
@@ -186,5 +201,6 @@ try {
 
     responderError('Método no permitido.', 405);
 } catch (PDOException $e) {
-    responderError('Ocurrió un error en la base de datos.', 500, array('detalle' => $e->getMessage()));
+    error_log('[gastos-personales] PDOException en tarjetas.php: ' . $e->getMessage());
+    responderError('Ocurrió un error en la base de datos.', 500);
 }

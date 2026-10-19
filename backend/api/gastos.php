@@ -6,11 +6,8 @@
  * Reglas de negocio del medio de pago:
  * - efectivo, billetera_virtual y debito: solo se informa el monto (pago en 1 vez).
  * - credito: se informa monto y cantidad de cuotas; el valor de cuota lo calcula el servidor.
- * El backend es la única fuente de verdad: valor_cuota y valor_total que mande el cliente se ignoran.
  */
-header("Access-Control-Allow-Origin: *");
-header("Access-Control-Allow-Methods: POST, GET, OPTIONS");
-header("Access-Control-Allow-Headers: Content-Type, Authorization");
+
 require_once __DIR__ . '/../config/database.php';
 require_once __DIR__ . '/../utils/response.php';
 require_once __DIR__ . '/../utils/validaciones.php';
@@ -64,7 +61,6 @@ function validarTarjetaSegunMetodo($pdo, $usuarioId, $metodoPago, $tarjetaId)
 /**
  * Calcula el plan de pago según el método.
  * Solo crédito admite cuotas; el resto siempre es 1 pago por el monto total.
- * Devuelve array(cantidad_cuotas, valor_cuota, valor_total).
  */
 function calcularPlanDePago($metodoPago, $monto, $datos)
 {
@@ -244,5 +240,6 @@ try {
 
     responderError('Método no permitido.', 405);
 } catch (PDOException $e) {
-    responderError('Ocurrió un error en la base de datos.', 500, array('detalle' => $e->getMessage()));
+    error_log('[gastos-personales] PDOException en gastos.php: ' . $e->getMessage());
+    responderError('Ocurrió un error en la base de datos.', 500);
 }

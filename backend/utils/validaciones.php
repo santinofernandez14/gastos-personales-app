@@ -3,9 +3,6 @@
  * Este archivo junta validaciones reutilizables del proyecto.
  * Sirve para evitar repetir controles en cada endpoint.
  */
-header("Access-Control-Allow-Origin: *");
-header("Access-Control-Allow-Methods: POST, GET, OPTIONS");
-header("Access-Control-Allow-Headers: Content-Type, Authorization");
 
 require_once __DIR__ . '/response.php';
 
@@ -71,19 +68,19 @@ const DIA_CIERRE_POR_DEFECTO = 1;
 
 /**
  * Valida el día de cierre de balance.
+ * Rechaza valores no enteros (ej: "3.5") en lugar de truncarlos.
  */
 function validarDiaCierre($dia)
 {
-    if (!is_numeric($dia)) {
-        responderError('El día de cierre debe ser un número.', 422);
+    $valor = filter_var($dia, FILTER_VALIDATE_INT, array(
+        'options' => array('min_range' => 1, 'max_range' => 28),
+    ));
+
+    if ($valor === false) {
+        responderError('El día de cierre debe ser un número entero entre 1 y 28.', 422);
     }
 
-    $diaEntero = (int) $dia;
-    if ($diaEntero < 1 || $diaEntero > 28) {
-        responderError('El día de cierre debe estar entre 1 y 28.', 422);
-    }
-
-    return $diaEntero;
+    return $valor;
 }
 
 /**
@@ -106,7 +103,7 @@ const CUOTAS_MAXIMAS = 60;
 
 /**
  * Valida la cantidad de cuotas de una compra con crédito.
- * Rechaza valores no enteros ("3.5", "abc") en vez de truncarlos en silencio.
+ * Rechaza valores no enteros ("3.5", "abc") en vez de truncarlos.
  */
 function validarCantidadCuotas($cuotas)
 {

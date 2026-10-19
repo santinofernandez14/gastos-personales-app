@@ -1,9 +1,6 @@
-backend/vendor
-backend/composer.phar
-backend/.env
-backend/.env.local
-backend/database.sql
-backend/.htaccess
-*.sql
-backend/api/configuracion.php
-backend/config/database.php
+.env
+.env.*
+.*sql
+configuracion.php
+.DS_Store
+Thumbs.db

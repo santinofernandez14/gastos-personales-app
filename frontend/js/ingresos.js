@@ -27,15 +27,42 @@ function renderTablaIngresos() {
 
   listadoIngresos.forEach(function (ingreso) {
     var tr = document.createElement('tr');
-    tr.innerHTML = '' +
-      '<td>' + ingreso.fecha + '</td>' +
-      '<td>' + ingreso.descripcion + '</td>' +
-      '<td>' + formatearMoneda(ingreso.monto) + '</td>' +
-      '<td>' + (ingreso.es_fijo ? 'Sí' : 'No') + '</td>' +
-      '<td>' +
-      '  <button class="btn btn-secundario btn-accion" data-accion="editar" data-id="' + ingreso.id + '">Editar</button>' +
-      '  <button class="btn btn-eliminar btn-accion" data-accion="eliminar" data-id="' + ingreso.id + '">Eliminar</button>' +
-      '</td>';
+
+    // Usamos textContent para los datos del usuario para evitar XSS.
+    var tdFecha = document.createElement('td');
+    tdFecha.textContent = ingreso.fecha;
+
+    var tdDesc = document.createElement('td');
+    tdDesc.textContent = ingreso.descripcion;
+
+    var tdMonto = document.createElement('td');
+    tdMonto.textContent = formatearMoneda(ingreso.monto);
+
+    var tdFijo = document.createElement('td');
+    tdFijo.textContent = ingreso.es_fijo ? 'Sí' : 'No';
+
+    var btnEditar = document.createElement('button');
+    btnEditar.className = 'btn btn-secundario btn-accion';
+    btnEditar.dataset.accion = 'editar';
+    btnEditar.dataset.id = ingreso.id;
+    btnEditar.textContent = 'Editar';
+
+    var btnEliminar = document.createElement('button');
+    btnEliminar.className = 'btn btn-eliminar btn-accion';
+    btnEliminar.dataset.accion = 'eliminar';
+    btnEliminar.dataset.id = ingreso.id;
+    btnEliminar.textContent = 'Eliminar';
+
+    var tdAcciones = document.createElement('td');
+    tdAcciones.appendChild(btnEditar);
+    tdAcciones.appendChild(document.createTextNode(' '));
+    tdAcciones.appendChild(btnEliminar);
+
+    tr.appendChild(tdFecha);
+    tr.appendChild(tdDesc);
+    tr.appendChild(tdMonto);
+    tr.appendChild(tdFijo);
+    tr.appendChild(tdAcciones);
 
     tbody.appendChild(tr);
   });

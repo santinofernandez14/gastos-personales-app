@@ -21,27 +21,64 @@ function renderTarjetas() {
     var card = document.createElement('article');
     card.className = 'tarjeta-item';
 
-    var gastos = tarjeta.gastos_asociados || [];
-    var listaGastos = '';
+    // Usamos textContent para los datos del usuario para evitar XSS.
+    var h3 = document.createElement('h3');
+    h3.textContent = tarjeta.nombre + ' (' + tarjeta.tipo + ')';
 
+    var pBanco = document.createElement('p');
+    var strongBanco = document.createElement('strong');
+    strongBanco.textContent = 'Banco: ';
+    pBanco.appendChild(strongBanco);
+    pBanco.appendChild(document.createTextNode(tarjeta.banco));
+
+    var pUltimos = document.createElement('p');
+    var strongUltimos = document.createElement('strong');
+    strongUltimos.textContent = 'Últimos 4: ';
+    pUltimos.appendChild(strongUltimos);
+    pUltimos.appendChild(document.createTextNode(tarjeta.ultimos_4));
+
+    var btnEditar = document.createElement('button');
+    btnEditar.className = 'btn btn-secundario btn-accion';
+    btnEditar.dataset.accion = 'editar';
+    btnEditar.dataset.id = tarjeta.id;
+    btnEditar.textContent = 'Editar';
+
+    var btnEliminar = document.createElement('button');
+    btnEliminar.className = 'btn btn-eliminar btn-accion';
+    btnEliminar.dataset.accion = 'eliminar';
+    btnEliminar.dataset.id = tarjeta.id;
+    btnEliminar.textContent = 'Eliminar';
+
+    var divBotones = document.createElement('div');
+    divBotones.appendChild(btnEditar);
+    divBotones.appendChild(document.createTextNode(' '));
+    divBotones.appendChild(btnEliminar);
+
+    var h4 = document.createElement('h4');
+    h4.textContent = 'Gastos asociados';
+
+    var ul = document.createElement('ul');
+    ul.className = 'lista-simple';
+
+    var gastos = tarjeta.gastos_asociados || [];
     if (gastos.length === 0) {
-      listaGastos = '<li>Sin gastos asociados.</li>';
+      var liVacio = document.createElement('li');
+      liVacio.textContent = 'Sin gastos asociados.';
+      ul.appendChild(liVacio);
     } else {
       gastos.forEach(function (gasto) {
-        listaGastos += '<li>' + gasto.fecha + ' - ' + gasto.descripcion + ' (' + formatearMoneda(gasto.monto) + ')</li>';
+        var li = document.createElement('li');
+        li.textContent = gasto.fecha + ' - ' + gasto.descripcion + ' (' + formatearMoneda(gasto.monto) + ')';
+        ul.appendChild(li);
       });
     }
 
-    card.innerHTML = '' +
-      '<h3>' + tarjeta.nombre + ' (' + tarjeta.tipo + ')</h3>' +
-      '<p><strong>Banco:</strong> ' + tarjeta.banco + '</p>' +
-      '<p><strong>Últimos 4:</strong> ' + tarjeta.ultimos_4 + '</p>' +
-      '<div>' +
-      '  <button class="btn btn-secundario btn-accion" data-accion="editar" data-id="' + tarjeta.id + '">Editar</button>' +
-      '  <button class="btn btn-eliminar btn-accion" data-accion="eliminar" data-id="' + tarjeta.id + '">Eliminar</button>' +
-      '</div>' +
-      '<h4>Gastos asociados</h4>' +
-      '<ul class="lista-simple">' + listaGastos + '</ul>';
+    card.appendChild(h3);
+    card.appendChild(pBanco);
+    card.appendChild(pUltimos);
+    card.appendChild(divBotones);
+    card.appendChild(h4);
+    card.appendChild(ul);
 
     contenedor.appendChild(card);
   });

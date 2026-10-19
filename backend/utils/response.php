@@ -124,12 +124,13 @@ set_exception_handler(function ($excepcion) {
 
     $GLOBALS['respuesta_enviada'] = true;
 
+    // Registramos el detalle solo en el log del servidor, nunca lo enviamos al cliente.
+    error_log('[gastos-personales] Excepción no capturada: ' . $excepcion->getMessage());
+
     echo json_encode(array(
         'ok' => false,
         'mensaje' => 'Ocurrió un error inesperado en el servidor.',
-        'errores' => array(
-            'detalle' => $excepcion->getMessage(),
-        ),
+        'errores' => array(),
     ), JSON_UNESCAPED_UNICODE);
 
     exit;
@@ -162,11 +163,12 @@ register_shutdown_function(function () {
 
     $GLOBALS['respuesta_enviada'] = true;
 
+    // Registramos el detalle solo en el log del servidor, nunca lo enviamos al cliente.
+    error_log('[gastos-personales] Error fatal: ' . $error['message']);
+
     echo json_encode(array(
         'ok' => false,
         'mensaje' => 'Ocurrió un error fatal en el servidor.',
-        'errores' => array(
-            'detalle' => $error['message'],
-        ),
+        'errores' => array(),
     ), JSON_UNESCAPED_UNICODE);
 });

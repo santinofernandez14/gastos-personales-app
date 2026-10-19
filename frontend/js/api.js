@@ -10,7 +10,7 @@
   * Devuelve la URL base de la API según la URL del frontend.
  */
 function obtenerUrlApi() {
-  var fallback = 'https://backend-production-c07cb.up.railway.app';
+  var fallback = 'http://localhost/gastos-personales-app/backend/api';
 
   // Controlamos si estamos en http o https.
   if (location.protocol !== 'http:' && location.protocol !== 'https:') {
@@ -32,6 +32,12 @@ function obtenerUrlApi() {
 
   if (baseAntesDeFrontend.length > 1 && baseAntesDeFrontend.charAt(baseAntesDeFrontend.length - 1) === '/') {
     baseAntesDeFrontend = baseAntesDeFrontend.substring(0, baseAntesDeFrontend.length - 1);
+  }
+
+  // Cuando el frontend está en la raíz (p.ej. Railway: /frontend/...) baseAntesDeFrontend
+  // queda como '/', que daría doble barra al concatenar con '/backend/api'.
+  if (baseAntesDeFrontend === '/') {
+    return location.origin + '/backend/api';
   }
 
   return location.origin + baseAntesDeFrontend + '/backend/api';

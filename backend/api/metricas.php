@@ -4,9 +4,7 @@
  * GET: muestra el resumen mensual (gastos, ingresos, economía, balance por cierre y categorías).
  * El día de cierre se configura en configuracion.php: este endpoint solo lo lee.
  */
-header("Access-Control-Allow-Origin: *");
-header("Access-Control-Allow-Methods: POST, GET, OPTIONS");
-header("Access-Control-Allow-Headers: Content-Type, Authorization");
+
 require_once __DIR__ . '/../config/database.php';
 require_once __DIR__ . '/../utils/response.php';
 require_once __DIR__ . '/../utils/validaciones.php';
@@ -168,6 +166,32 @@ try {
 
     $balanceCierre = $totalIngresosBalance - $totalGastosBalance;
 
+    // Servicio externo #2: cotización USD → ARS desde Open Exchange Rate API (sin clave).
+    // Si la llamada falla, devolvemos null y la app sigue funcionando igual.
+    $cotizacionUsd = null;
+    $cotizacionFecha = null;
+    $ch = curl_init('https://open.er-api.com/v6/latest/USD');
+    if ($ch !== false) {
+        curl_setopt_array($ch, array(
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_TIMEOUT => 5,
+            CURLOPT_CONNECTTIMEOUT => 5,
+        ));
+        $respuestaCurl = curl_exec($ch);
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
+
+        if ($respuestaCurl !== false && $httpCode === 200) {
+            $datosApi = json_decode($respuestaCurl, true);
+            if (is_array($datosApi) && isset($datosApi['rates']['ARS']) && is_numeric($datosApi['rates']['ARS'])) {
+                $cotizacionUsd = round((float) $datosApi['rates']['ARS'], 2);
+                if (isset($datosApi['time_last_update_utc'])) {
+                    $cotizacionFecha = $datosApi['time_last_update_utc'];
+                }
+            }
+        }
+    }
+
     responderExito('Métricas obtenidas correctamente.', array(
         'mes_consultado' => sprintf('%04d-%02d', $anio, $mes),
         'dia_cierre_balance' => $diaCierre,
@@ -187,7 +211,13 @@ try {
             'estado' => $estadoEconomia,
         ),
         'balance_por_cierre' => round($balanceCierre, 2),
+        'cotizacion_usd_ars' => array(
+            'valor' => $cotizacionUsd,
+            'fecha_actualizacion' => $cotizacionFecha,
+            'fuente' => 'open.er-api.com',
+        ),
     ));
 } catch (PDOException $e) {
-    responderError('Ocurrió un error en la base de datos.', 500, array('detalle' => $e->getMessage()));
+    error_log('[gastos-personales] PDOException en metricas.php: ' . $e->getMessage());
+    responderError('Ocurrió un error en la base de datos.', 500);
 }
