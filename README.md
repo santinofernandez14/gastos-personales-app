@@ -6,11 +6,11 @@ Aplicación web fullstack para registrar y administrar gastos personales, ingres
 
 Integrante    - Aportes
 
-Sebastián Almirón: Integración con servicios externos (Brevo, API de cotización), README
-Santino Fernández: Frontend (JS, formularios, lógica de cliente), README
-Sebastián Infante: Backend (autenticación, tokens de sesión, seguridad), README
-Emanuel Sequeira: Infraestructura (Docker, Railway, base de datos), README
-Tomás Zucchi: Backend (endpoints CRUD de gastos e ingresos, validaciones), README
+- **Sebastián Almirón:** Integración con servicios externos (Brevo, API de cotización), README
+- **Santino Fernández:** Frontend (JS, formularios, lógica de cliente), README
+- **Sebastián Infante:** Backend (autenticación, tokens de sesión, seguridad), README
+- **Emanuel Sequeira:** Infraestructura (Docker, Railway, base de datos), README
+- **Tomás Zucchi: Backend** (endpoints CRUD de gastos e ingresos, validaciones), README
 
 ## URL pública
 
