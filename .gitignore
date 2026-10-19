@@ -1,6 +1,4 @@
 .env
-.env.*
-.*sql
 configuracion.php
 .DS_Store
 Thumbs.db
